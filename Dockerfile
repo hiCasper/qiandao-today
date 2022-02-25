@@ -29,13 +29,13 @@ RUN apt update && \
   pip install --no-cache-dir --force-reinstall --no-deps opencv-python-headless && \
   apt autoremove -y build-essential && apt clean
 
-ENV PORT 80
+ENV PORT 8923
 EXPOSE $PORT/tcp
 
 # timezone
 ENV TZ=CST-8
 
 # 添加挂载点
-VOLUME ["/usr/src/app/","/data"]
+VOLUME ["/usr/src/app/"]
 
 CMD ["python","/usr/src/app/run.py"]
