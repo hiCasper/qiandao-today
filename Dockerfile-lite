@@ -1,21 +1,22 @@
 # 基础镜像
-FROM python:3.8-slim
+FROM python:3.8-alpine
 
 # Qiandao
 WORKDIR /usr/src/app
 
 # Environments
 ENV PYCURL_SSL_LIBRARY=openssl
-RUN apt update && \
-  apt install -y --no-install-recommends git libssl-dev libcurl4-openssl-dev build-essential --no-install-recommends && \
+RUN apk update && \
+  apk add --no-cache libcurl && \
+  apk add --no-cache --virtual .build-deps git curl-dev build-base && \
   git clone --depth 1 https://github.com/qiandao-today/qiandao.git . && \
   sed -i '/==/!d' requirements.txt && \
   sed -i 's/# //' requirements.txt && \
+  sed -i '/ddddocr/d' requirements.txt && \
+  sed -i '/opencv-python/d' requirements.txt && \
   pip install --no-cache-dir -r requirements.txt && \
-  pip uninstall -y opencv-python && \
-  pip install --no-cache-dir --force-reinstall --no-deps opencv-python-headless && \
   rm -rf .git && \
-  apt autoremove -y git build-essential && apt clean
+  apk --purge del .build-deps
 
 ENV PORT 8923
 EXPOSE $PORT/tcp
