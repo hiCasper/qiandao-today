@@ -18,7 +18,7 @@ RUN apk update && \
   rm -rf .git && \
   apk --purge del .build-deps
 
-ENV PORT 8923
+ENV PORT 80
 EXPOSE $PORT/tcp
 
 # timezone

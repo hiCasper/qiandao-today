@@ -17,7 +17,7 @@ RUN apt update && \
   rm -rf .git && \
   apt autoremove -y git build-essential && apt clean
 
-ENV PORT 8923
+ENV PORT 80
 EXPOSE $PORT/tcp
 
 # timezone
