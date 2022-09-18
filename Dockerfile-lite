@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 ENV PYCURL_SSL_LIBRARY=openssl
 RUN apk update && \
   apk add --no-cache libcurl && \
-  apk add --no-cache --virtual .build-deps git curl-dev build-base && \
+  apk add --no-cache --virtual .build-deps git curl-dev libffi-dev build-base && \
   git clone --depth 1 https://github.com/qiandao-today/qiandao.git . && \
   sed -i '/==/!d' requirements.txt && \
   sed -i 's/# //' requirements.txt && \
