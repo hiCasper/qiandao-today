@@ -10,7 +10,7 @@ ENV PYCURL_SSL_LIBRARY=openssl
 
 RUN apk update && \
   apk add --no-cache libcurl && \
-  apk add --no-cache --virtual .build-deps build-base curl-dev git && \
+  apk add --no-cache --virtual .build-deps git build-base curl-dev libffi-dev && \
   git clone --depth 1 https://github.com/qiandao-today/qiandao.git . && \
   sed -i 's|^-i.*||' requirements.txt && \
   sed -i 's/^# pycurl/pycurl/' requirements.txt && \

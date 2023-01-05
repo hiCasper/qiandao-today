@@ -68,5 +68,5 @@ jobs:
         with:
           file: ./Dockerfile-lite
           push: true
-          platforms: linux/386,linux/amd64,linux/arm64,linux/arm/v7
+          platforms: linux/amd64,linux/arm64
           tags: hicasper/qiandao-today:lite,hicasper/qiandao-today:${{ steps.getversion.outputs.GITVERSION }}-lite
