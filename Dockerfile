@@ -1,5 +1,5 @@
 # 基础镜像
-FROM python:3.8-slim
+FROM python:3.9-slim
 
 # Qiandao
 WORKDIR /usr/src/app
@@ -7,15 +7,15 @@ WORKDIR /usr/src/app
 # Environments
 ENV PYCURL_SSL_LIBRARY=openssl
 RUN apt update && \
-  apt install -y --no-install-recommends git libssl-dev libcurl4-openssl-dev build-essential --no-install-recommends && \
+  apt install -y --no-install-recommends git libssl-dev libcurl4-openssl-dev build-essential && \
   git clone --depth 1 https://github.com/qiandao-today/qiandao.git . && \
-  sed -i '/==/!d' requirements.txt && \
-  sed -i 's/# //' requirements.txt && \
+  sed -i 's|^-i.*||' requirements.txt && \
+  sed -i 's/^# //' requirements.txt && \
   pip install --no-cache-dir -r requirements.txt && \
-  pip uninstall -y opencv-python && \
-  pip install --no-cache-dir --force-reinstall --no-deps opencv-python-headless && \
+  apt autoremove -y git build-essential && apt clean && \
   rm -rf .git && \
-  apt autoremove -y git build-essential && apt clean
+  rm -rf /usr/share/doc/* && \
+  rm -rf /usr/share/man/*
 
 ENV PORT 80
 EXPOSE $PORT/tcp
@@ -24,6 +24,6 @@ EXPOSE $PORT/tcp
 ENV TZ=CST-8
 
 # 添加挂载点
-VOLUME ["/usr/src/app/"]
+VOLUME ["/usr/src/app/config"]
 
 CMD ["python","/usr/src/app/run.py"]

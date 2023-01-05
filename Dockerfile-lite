@@ -1,22 +1,23 @@
 # 基础镜像
-FROM python:3.8-alpine
+FROM python:3.9-alpine
 
 # Qiandao
 WORKDIR /usr/src/app
 
 # Environments
+ENV QIANDAO_LITE=True
 ENV PYCURL_SSL_LIBRARY=openssl
+
 RUN apk update && \
   apk add --no-cache libcurl && \
-  apk add --no-cache --virtual .build-deps git curl-dev libffi-dev build-base && \
+  apk add --no-cache --virtual .build-deps build-base curl-dev git && \
   git clone --depth 1 https://github.com/qiandao-today/qiandao.git . && \
-  sed -i '/==/!d' requirements.txt && \
-  sed -i 's/# //' requirements.txt && \
-  sed -i '/ddddocr/d' requirements.txt && \
-  sed -i '/opencv-python/d' requirements.txt && \
+  sed -i 's|^-i.*||' requirements.txt && \
+  sed -i 's/^# pycurl/pycurl/' requirements.txt && \
   pip install --no-cache-dir -r requirements.txt && \
+  apk --purge del .build-deps && \
   rm -rf .git && \
-  apk --purge del .build-deps
+  rm -rf /var/cache/apk/*
 
 ENV PORT 80
 EXPOSE $PORT/tcp
@@ -25,6 +26,6 @@ EXPOSE $PORT/tcp
 ENV TZ=CST-8
 
 # 添加挂载点
-VOLUME ["/usr/src/app/"]
+VOLUME ["/usr/src/app/config"]
 
 CMD ["python","/usr/src/app/run.py"]
