@@ -15,10 +15,10 @@ jobs:
         name: Checkout repository
         uses: actions/checkout@v2
       - 
-        name: Get version
-        id: get-version
-        if: startsWith(github.ref, 'refs/tags/') && startsWith(github.repository, 'qiandao-today/qiandao')
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+        name: Get upstream version
+        id: getversion
+        run: |
+          echo "GITVERSION=$(curl -fsSL https://github.com/qiandao-today/qiandao/raw/master/version.json | jq '.version')" >> $GITHUB_OUTPUT
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -37,7 +37,7 @@ jobs:
         with:
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: hicasper/qiandao-today:latest,hicasper/qiandao-today:${{ steps.get_version.outputs.VERSION }}
+          tags: hicasper/qiandao-today:latest,hicasper/qiandao-today:${{ steps.getversion.outputs.GITVERSION }}
 
   build-lite:
     runs-on: ubuntu-latest
@@ -46,10 +46,10 @@ jobs:
         name: Checkout repository
         uses: actions/checkout@v2
       - 
-        name: Get version
-        id: get-version
-        if: startsWith(github.ref, 'refs/tags/') && startsWith(github.repository, 'qiandao-today/qiandao')
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+        name: Get upstream version
+        id: getversion
+        run: |
+          echo "GITVERSION=$(curl -fsSL https://github.com/qiandao-today/qiandao/raw/master/version.json | jq '.version')" >> $GITHUB_OUTPUT
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -69,4 +69,4 @@ jobs:
           file: ./Dockerfile-lite
           push: true
           platforms: linux/386,linux/amd64,linux/arm64,linux/arm/v7
-          tags: hicasper/qiandao-today:lite,hicasper/qiandao-today:${{ steps.get_version.outputs.VERSION }}-lite
+          tags: hicasper/qiandao-today:lite,hicasper/qiandao-today:${{ steps.getversion.outputs.GITVERSION }}-lite
