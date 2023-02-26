@@ -11,7 +11,7 @@ RUN apk update && \
   apk add --no-cache libcurl && \
   apk add --no-cache --virtual .build-deps build-base curl-dev git && \
   git clone --depth 1 https://github.com/qiandao-today/qiandao.git . && \
-  sed -i 's|^-i.*||' requirements.txt && \
+  sed -i '/^-i.*/d' requirements.txt && \
   sed -i 's/^# pycurl/pycurl/' requirements.txt && \
   pip install --no-cache-dir -r requirements.txt && \
   apk --purge del .build-deps && \
