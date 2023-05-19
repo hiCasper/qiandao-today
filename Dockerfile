@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 ENV PYCURL_SSL_LIBRARY=openssl
 RUN apt update && \
   apt install -y --no-install-recommends git libssl-dev libcurl4-openssl-dev build-essential && \
-  git clone --depth 1 https://github.com/qiandao-today/qiandao.git . && \
+  git clone --depth 1 https://github.com/qd-today/qd.git . && \
   sed -i '/==/!d' requirements.txt && \
   sed -i 's/# //g' requirements.txt && \
   pip install --no-cache-dir -r requirements.txt && \
