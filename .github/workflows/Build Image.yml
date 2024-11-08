@@ -5,7 +5,8 @@ on:
     branches:
       - 'autobuild'
   schedule:
-    - cron: "0 18 */3 * *"
+    - cron: "0 18 */7 * *"
+  workflow_dispatch:
 
 jobs:
   build:
@@ -13,12 +14,12 @@ jobs:
     steps:
       - 
         name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - 
         name: Get upstream version
         id: getversion
         run: |
-          echo "GITVERSION=$(curl -fsSL https://github.com/qiandao-today/qiandao/raw/master/version.json | jq '.version')" >> $GITHUB_OUTPUT
+          echo "GITVERSION=$(curl -fsSL https://github.com/qd-today/qd/raw/master/version.json | jq '.version')" >> $GITHUB_OUTPUT
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -33,23 +34,23 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
         name: Build and push
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v4
         with:
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: hicasper/qiandao-today:latest,hicasper/qiandao-today:${{ steps.getversion.outputs.GITVERSION }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/qd-today:latest,${{ secrets.DOCKERHUB_USERNAME }}/qd-today:${{ steps.getversion.outputs.GITVERSION }}
 
   build-lite:
     runs-on: ubuntu-latest
     steps:
       - 
         name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - 
         name: Get upstream version
         id: getversion
         run: |
-          echo "GITVERSION=$(curl -fsSL https://github.com/qiandao-today/qiandao/raw/master/version.json | jq '.version')" >> $GITHUB_OUTPUT
+          echo "GITVERSION=$(curl -fsSL https://github.com/qd-today/qd/raw/master/version.json | jq '.version')" >> $GITHUB_OUTPUT
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -64,9 +65,9 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
         name: Build and push
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v4
         with:
           file: ./Dockerfile-lite
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: hicasper/qiandao-today:lite,hicasper/qiandao-today:${{ steps.getversion.outputs.GITVERSION }}-lite
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/qd-today:lite,${{ secrets.DOCKERHUB_USERNAME }}/qd-today:${{ steps.getversion.outputs.GITVERSION }}-lite
