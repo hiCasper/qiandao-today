@@ -11,6 +11,7 @@ RUN apt update && \
   git clone --depth 1 https://github.com/qd-today/qd.git . && \
   sed -i '/==/!d' requirements.txt && \
   sed -i 's/# //g' requirements.txt && \
+  sed -i 's/ddddocr==1.4.7/ddddocr==1.4.11/g' requirements.txt && \
   pip install --no-cache-dir -r requirements.txt && \
   apt autoremove -y git build-essential && apt clean && \
   rm -rf .git && \
